@@ -1,4 +1,5 @@
 /*jslint browser: true, evil: true */
+import './src/addEventListener-mdn-polyfill.js';
 
 import UserInterface from './src/user-interface.js'
 import Cookie from './src/cookie.js'
@@ -49,7 +50,7 @@ class Tarteaucitron {
 		tarteaucitron.parameters = params;
 		if (alreadyLaunch === 0) {
 			alreadyLaunch = 1;
-			if (window.addEventListener) {
+
 				window.addEventListener("load", function () {
 					tarteaucitron.load();
 					tarteaucitron.fallback(['tarteaucitronOpenPanel'], function (elem) {
@@ -105,98 +106,17 @@ class Tarteaucitron {
 						}
 					}
 				}, false);
-			} else {
-				window.attachEvent("onload", function () {
-					tarteaucitron.load();
-					tarteaucitron.fallback(['tarteaucitronOpenPanel'], function (elem) {
-						elem.attachEvent("onclick", function (event) {
-							tarteaucitron.userInterface.openPanel();
-							event.preventDefault();
-						});
-					}, true);
-				});
-				window.attachEvent("onscroll", function () {
-					var scrollPos = window.pageYOffset || document.documentElement.scrollTop,
-						heightPosition;
-					if (document.getElementById('tarteaucitronAlertBig') !== null && !tarteaucitron.highPrivacy) {
-						if (document.getElementById('tarteaucitronAlertBig').style.display === 'block') {
-							heightPosition = document.getElementById('tarteaucitronAlertBig').offsetHeight + 'px';
 
-							if (scrollPos > (screen.height * 2)) {
-								tarteaucitron.userInterface.respondAll(true);
-							} else if (scrollPos > (screen.height / 2)) {
-								document.getElementById('tarteaucitronDisclaimerAlert').innerHTML = '<strong>' + tarteaucitron.lang.alertBigScroll + '</strong> ' + tarteaucitron.lang.alertBig;
-							}
-							if (tarteaucitron.orientation === 'top') {
-								document.getElementById('tarteaucitronPercentage').style.top = heightPosition;
-							} else {
-								document.getElementById('tarteaucitronPercentage').style.bottom = heightPosition;
-							}
-							document.getElementById('tarteaucitronPercentage').style.width = ((100 / (screen.height * 2)) * scrollPos) + '%';
-						}
-					}
-				});
-				window.attachEvent("onkeydown", function (evt) {
-					if (evt.keyCode === 27) {
-						tarteaucitron.userInterface.closePanel();
-					}
-
-					if (evt.keyCode === 9 && focusableEls.indexOf(evt.target) >= 0) {
-						if (evt.shiftKey) /* shift + tab */ {
-							if (document.activeElement === firstFocusableEl) {
-								lastFocusableEl.focus();
-								evt.preventDefault();
-							}
-						} else /* tab */ {
-							if (document.activeElement === lastFocusableEl) {
-								firstFocusableEl.focus();
-								evt.preventDefault();
-							}
-						}
-					}
-
-				});
-				window.attachEvent("onhashchange", function () {
-					if (document.location.hash === tarteaucitron.hashtag && tarteaucitron.hashtag !== '') {
-						tarteaucitron.userInterface.openPanel();
-					}
-				});
-				window.attachEvent("onresize", function () {
-					if (document.getElementById('tarteaucitron') !== null) {
-						if (document.getElementById('tarteaucitron').style.display === 'block') {
-							tarteaucitron.userInterface.jsSizing('main');
-						}
-					}
-
-					if (document.getElementById('tarteaucitronCookiesListContainer') !== null) {
-						if (document.getElementById('tarteaucitronCookiesListContainer').style.display === 'block') {
-							tarteaucitron.userInterface.jsSizing('cookie');
-						}
-					}
-				});
-			}
 
 			if (typeof XMLHttpRequest !== 'undefined') {
 				origOpen = XMLHttpRequest.prototype.open;
 				XMLHttpRequest.prototype.open = function () {
 
-					if (window.addEventListener) {
 						this.addEventListener("load", function () {
 							if (typeof tarteaucitronProLoadServices === 'function') {
 								tarteaucitronProLoadServices();
 							}
 						}, false);
-					} else if (typeof this.attachEvent !== 'undefined') {
-						this.attachEvent("onload", function () {
-							if (typeof tarteaucitronProLoadServices === 'function') {
-								tarteaucitronProLoadServices();
-							}
-						});
-					} else {
-						if (typeof tarteaucitronProLoadServices === 'function') {
-							setTimeout(tarteaucitronProLoadServices, 1000);
-						}
-					}
 
 					try {
 						origOpen.apply(this, arguments);
