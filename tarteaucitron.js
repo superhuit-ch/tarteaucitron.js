@@ -1,9 +1,10 @@
 /*jslint browser: true, evil: true */
 import './src/addEventListener-mdn-polyfill.js';
 
-import UserInterface from './src/user-interface.js'
-import Cookie from './src/cookie.js'
-import MakeAsync from './src/make-async.js'
+import addScript from './src/add-script.js';
+import UserInterface from './src/user-interface.js';
+import Cookie from './src/cookie.js';
+import MakeAsync from './src/make-async.js';
 
 
 // define correct path for files inclusion
@@ -178,12 +179,12 @@ class Tarteaucitron {
 			document.getElementsByTagName('head')[0].appendChild(linkElement);
 		}
 		// Step 2: load language and services
-		tarteaucitron.addScript(pathToLang, '', function () {
+		addScript(pathToLang, '', function () {
 
 			if (tarteaucitronCustomText !== '') {
 				tarteaucitron.lang = tarteaucitron.AddOrUpdate(tarteaucitron.lang, tarteaucitronCustomText);
 			}
-			tarteaucitron.addScript(pathToServices, '', function () {
+			addScript(pathToServices, '', function () {
 
 				var body = document.body,
 					div = document.createElement('div'),
@@ -330,8 +331,8 @@ class Tarteaucitron {
 					html += '</div>';
 				}
 
-				tarteaucitron.addScript(tarteaucitron.cdn + 'advertising.js?v=' + tarteaucitron.version, '', function () {
 					if (tarteaucitronNoAdBlocker === true || tarteaucitron.parameters.adblocker === false) {
+				addScript(this.cdn + 'advertising.js?v=' + tarteaucitron.version, '', function () {
 
 						// create a wrapper container at the same level than tarteaucitron so we can add an aria-hidden when tarteaucitron is opened
 						/*var wrapper = document.createElement('div');
