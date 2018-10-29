@@ -1,0 +1,26 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-size: 1em;
+}
+
+body {
+	height: 100vh;
+	display: grid;
+	grid-template-rows: 1fr 7fr 2fr;
+}
+
+header {
+	grid-row: 1;
+	background-color: lightcoral;
+}
+
+main {
+	grid-row: 2;
+}
+
+footer {
+	grid-row: 3;
+	background-color: #333;
+}

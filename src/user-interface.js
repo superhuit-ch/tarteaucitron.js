@@ -1,4 +1,4 @@
-class UserInterface {
+export default class UserInterface {
 	constructor () {
 
 	}
